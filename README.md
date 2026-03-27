@@ -17,22 +17,4 @@ A reproducible data pipeline for the EduYou capstone that prepares **RAG-ready, 
 
 ---
 
-## Repository / Folder Structure
 
-Recommended layout (Colab-friendly and GitHub-friendly):
-
-```text
-.
-├── data_raw/                        # raw downloaded files (DO NOT commit large files)
-│   ├── Most-Recent-Cohorts-Field-of-Study.csv
-│   ├── CIP2020_SOC2018_Crosswalk.xlsx
-│   └── OES_Report.xlsx
-├── cleaned/                         # pipeline outputs (optional to commit if small)
-│   ├── college_scorecard_clean_for_rag.csv
-│   ├── cip_soc_crosswalk_clean.csv
-│   ├── oes_clean_for_rag.csv
-│   ├── eduyou_joined_for_rag.csv
-│   ├── eduyou_joined_for_rag_wage_only.csv
-│   └── eduyou_cip_docs_for_embedding.csv
-├── notebooks/                       # Colab notebooks / experiments
-└── README.md
