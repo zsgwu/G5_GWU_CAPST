@@ -1,5 +1,4 @@
-# G5_GWU_CAPST
-Capstone_Project_Group 5
+# Capstone_Project_Group 5
 
 # EduYou RAG Data Pipeline
 
