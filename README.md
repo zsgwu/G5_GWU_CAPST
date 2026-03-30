@@ -6,6 +6,8 @@
 
 This project prepares a **Retrieval‑Augmented Generation (RAG)**–ready dataset that connects **fields of study**, **related occupations**, and **labor market outcomes** using authoritative U.S. government data. The resulting dataset supports explainable, grounded responses to questions about education pathways and career outcomes.
 
+The pipeline separates **data engineering**, **document construction**, **embedding**, and **retrieval**, ensuring compatibility with standard RAG templates and avoiding semantic ambiguity.
+
 ---
 
 ## Data Sources
@@ -88,37 +90,64 @@ This produced a comprehensive joined table linking:
 
 ## Final Outputs
 
-Two joined datasets were saved:
+### Analytical Join Outputs
 
-### 1. Full Joined Dataset
+These files support diagnostics, validation, and transparency but are **not used directly for RAG**.
 
-- **File:** `cleaned/eduyou_joined_for_rag.csv`
-- Contains all program–occupation links, including rows without wage data.
-- Intended for transparency, diagnostics, and reproducibility.
+- **Full Joined Dataset**  
+  - File: `cleaned/eduyou_joined_for_rag.csv`
+  - Contains all program–occupation links, including rows without wage data.
 
-### 2. RAG‑Ready Joined Dataset (Wage‑Only)
-
-- **File:** `cleaned/eduyou_joined_for_rag_wage_only.csv`
-- Retains only rows with valid annual median wages.
-- Used as the foundation for RAG document construction.
-
-**Rationale**  
-Filtering to wage‑available rows prevents hallucination and ensures that retrieved answers are grounded in numeric evidence.
+- **Wage‑Only Join (Filtered)**  
+  - File: `cleaned/eduyou_joined_for_rag_wage_only.csv`
+  - Retains only rows with valid annual median wages.
 
 ---
 
 ## RAG Document Construction
 
-From the wage‑only dataset:
+To support RAG, the pipeline **does not embed the raw joined tables**. Instead, it constructs a document‑level corpus:
 
-- Aggregated data to **one document per `cip4` and degree level**.
-- Selected top occupations ranked by employment.
+- Aggregated data to **one document per `cip4` and degree level**
+- Selected top related occupations ranked by national employment
 - Each document includes:
-  - Median earnings four years after program completion
-  - Related occupations with employment and wage estimates
-  - A note when some related occupations lack wage data in OEWS
+  - National median earnings four years after completion
+  - Related occupations with OEWS employment and wage estimates
+  - Explicit notes where occupation‑level wages are unavailable
 
-The resulting corpus is compact, interpretable, and suitable for embedding in a RAG system.
+### RAG Document Output
+
+- **File:** `cleaned/eduyou_cip_docs_for_embedding.csv`
+- **Grain:** One row = one semantic document
+- **Purpose:** Input to embedding and retrieval steps
+
+This design ensures that each embedded unit represents a coherent, interpretable narrative rather than a relational join.
+
+---
+
+## Embedding & Retrieval (RAG Execution)
+
+RAG is implemented using **Azure OpenAI embeddings**, following the professor‑provided template.
+
+### Embedding Notebook
+
+- **Notebook:** `get_embeddings_eduyou.ipynb`
+- **Input:** `cleaned/eduyou_cip_docs_for_embedding.csv`
+- **Output:** `embeddings/eduyou_embeddings_<MODEL>.csv`
+- **Embedding models supported:**
+  - `text-embedding-ada-002`
+  - `text-embedding-3-small`
+  - `text-embedding-3-large`
+
+The deployment name matches the model name directly, as required by the Azure OpenAI setup.
+
+### Retrieval & Query Notebook
+
+- **Notebook:** `rag_query_eduyou.ipynb`
+- Loads precomputed embeddings
+- Embeds user queries using the same model
+- Retrieves Top‑K documents via cosine similarity
+- (Optional) passes retrieved context to a generation model
 
 ---
 
@@ -126,68 +155,57 @@ The resulting corpus is compact, interpretable, and suitable for embedding in a 
 
 - **Explainability over coverage:** No imputation or invented values
 - **Granularity alignment:** Explicit handling of CIP4 vs. CIP6 differences
-- **Transparency:** Clear distinction between missing data and join failures
+- **Transparency:** Clear distinction between analytical joins and RAG documents
 - **RAG safety:** Only factual, numeric content is embedded
+- **Template compliance:** One row = one document, matching standard RAG workflows
+
+---
 
 ## Limitations & Ethical Use
 
 ### Data Coverage Limitations
 - Not all occupations mapped in the CIP–SOC crosswalk appear in the BLS OEWS dataset, and not all SOC codes published by OEWS include numeric annual median wage estimates.
-- Missing wage values arise from **documented OEWS reporting constraints** (e.g., suppression, aggregation, or non‑standard wage reporting), not from join or processing errors.
-- To prevent misrepresentation, the RAG‑ready dataset used for embedding includes **only rows with valid numeric wage estimates**. Occupations without available wages are excluded from retrieval content but tracked separately for transparency.
+- Missing wage values arise from **documented OEWS reporting constraints**, not from join or processing errors.
+- Occupations without available wages are excluded from retrieval content to prevent misrepresentation.
 
 ### Granularity and Interpretation
-- College Scorecard outcomes are published at the **4‑digit CIP (field‑of‑study) level**, while the CIP–SOC crosswalk operates at a more granular 6‑digit CIP level.
-- The pipeline intentionally aligns these sources by joining on the **CIP4 family**, which supports consistency and interpretability but does not imply causal or deterministic relationships between specific programs and occupations.
-- All education‑to‑occupation links should be interpreted as **associative mappings**, not guarantees of career outcomes.
+- Education‑to‑occupation links are **associative**, not causal.
+- National benchmarks should not be interpreted as institution‑specific outcomes.
 
 ### Appropriate Use of Wage Information
-- Wage estimates reflect **national median values** and do not account for geographic variation, individual experience, employer type, or labor market dynamics.
-- The data should be used for **informational and exploratory purposes only**, such as career exploration or academic analysis.
-- The outputs are **not intended** for individual wage prediction, hiring decisions, admissions decisions, or policy evaluation without additional contextual analysis.
+- Wage estimates are national medians and do not reflect individual circumstances.
+- Outputs are intended for **informational and academic use only**.
 
-### RAG Safety and Responsible AI Use
-- No wages or employment values are imputed, extrapolated, or inferred.
-- The RAG corpus embeds **only factual, numeric information** sourced directly from authoritative datasets.
-- When data are unavailable, the system is designed to acknowledge limitations explicitly rather than generate speculative responses.
-
-### Ethical Considerations
-- The pipeline relies exclusively on **publicly available, non‑personal data**.
-- No individual‑level records or personally identifiable information are used.
-- Users should avoid interpreting aggregated outcomes as prescriptive guidance for individual educational or career decisions.
+### Responsible AI Use
+- No personal or individual‑level data are used.
+- The system explicitly acknowledges data limitations rather than generating speculative answers.
 
 ---
 
 ## Citation & Attribution
 
-This project relies exclusively on **publicly available U.S. government datasets**. All data are used in accordance with their respective terms of use and attribution guidelines.
+This project relies exclusively on **publicly available U.S. government datasets**.
 
 ### Data Sources
 
 - **College Scorecard**  
-  U.S. Department of Education. *College Scorecard – Most Recent Cohorts, Field of Study*.  
+  U.S. Department of Education.  
   https://collegescorecard.ed.gov/data/
 
 - **CIP–SOC Crosswalk**  
-  National Center for Education Statistics (NCES) and U.S. Bureau of Labor Statistics (BLS).  
-  *CIP 2020 to SOC 2018 Crosswalk*.  
+  NCES & U.S. Bureau of Labor Statistics.  
   https://nces.ed.gov/ipeds/cipcode/
 
 - **Occupational Employment and Wage Statistics (OEWS)**  
-  U.S. Bureau of Labor Statistics. *Occupational Employment and Wage Statistics*.  
+  U.S. Bureau of Labor Statistics.  
   https://www.bls.gov/oes/
-
-### Attribution Notes
-
-- College Scorecard data are produced by the U.S. Department of Education and reflect program‑level outcomes aggregated at the field‑of‑study level.
-- The CIP–SOC crosswalk is jointly maintained by NCES and BLS and provides associative mappings between instructional programs and occupations.
-- OEWS data are produced by the U.S. Bureau of Labor Statistics and reflect national employment and wage estimates based on survey data.
 
 ### Disclaimer
 
-The interpretations, data processing decisions, and derived datasets presented in this repository are the responsibility of the project author and **do not represent the views or endorsements** of the U.S. Department of Education, the National Center for Education Statistics, or the U.S. Bureau of Labor Statistics.
+The interpretations and derived datasets presented in this repository are the responsibility of the project authors and **do not represent official views** of the U.S. Department of Education, NCES, or the U.S. Bureau of Labor Statistics.
+
 ---
 
 ## Result
 
-The pipeline produces a **defensible, RAG‑ready dataset** that supports accurate and explainable responses about education‑to‑career pathways while respecting known limitations of the underlying data sources.
+The EduYou pipeline produces a **defensible, RAG‑ready system** that enables accurate, explainable exploration of education‑to‑career pathways while respecting data limitations and responsible AI principles.
