@@ -2,6 +2,16 @@
 
 # EduYou RAG Data Pipeline
 
+---
+
+## Executive Summary
+
+EduYou is a **retrieval‑augmented generation (RAG)–ready data pipeline** designed to support transparent, evidence‑based exploration of education‑to‑career pathways. Using publicly available U.S. government data, the system links **fields of study**, **related occupations**, and **labor market outcomes** into semantically coherent documents suitable for vector embedding and retrieval.
+
+Rather than relying on opaque or speculative generation, the pipeline emphasizes **explainability, data provenance, and responsible use**. Retrieved documents provide grounded context for answering user questions about education pathways and career outcomes, while optional generation demonstrates how retrieved evidence can be translated into accessible, natural‑language responses. The design prioritizes analytical defensibility and alignment with standard RAG architectures.
+
+---
+
 ## Overview
 
 This project prepares a **Retrieval‑Augmented Generation (RAG)**–ready dataset that connects **fields of study**, **related occupations**, and **labor market outcomes** using authoritative U.S. government data. The resulting dataset supports explainable, grounded responses to questions about education pathways and career outcomes.
@@ -147,7 +157,9 @@ The deployment name matches the model name directly, as required by the Azure Op
 - Loads precomputed embeddings
 - Embeds user queries using the same model
 - Retrieves Top‑K documents via cosine similarity
-- (Optional) passes retrieved context to a generation model
+- (Optional) demonstrates how retrieved context can be passed to a generation model
+
+The answer‑generation step is included as a demonstration of how retrieved documents can support user‑facing responses. Evaluation focuses on document construction, embedding quality, and retrieval accuracy rather than on the generative model itself.
 
 ---
 
@@ -156,7 +168,7 @@ The deployment name matches the model name directly, as required by the Azure Op
 - **Explainability over coverage:** No imputation or invented values
 - **Granularity alignment:** Explicit handling of CIP4 vs. CIP6 differences
 - **Transparency:** Clear distinction between analytical joins and RAG documents
-- **RAG safety:** Only factual, numeric content is embedded
+- **Grounding & safety:** Only factual, numeric, and source‑verifiable content is embedded
 - **Template compliance:** One row = one document, matching standard RAG workflows
 
 ---
@@ -200,9 +212,27 @@ This project relies exclusively on **publicly available U.S. government datasets
   U.S. Bureau of Labor Statistics.  
   https://www.bls.gov/oes/
 
+### Citation Strategy
+
+Generated responses reference the primary datasets (e.g., College Scorecard, IPEDS, BLS OEWS) rather than internal document identifiers. This choice improves transparency and interpretability for non‑technical users and avoids exposing implementation‑specific identifiers that lack standalone meaning.
+
 ### Disclaimer
 
 The interpretations and derived datasets presented in this repository are the responsibility of the project authors and **do not represent official views** of the U.S. Department of Education, NCES, or the U.S. Bureau of Labor Statistics.
+
+---
+
+## Methodology
+
+The EduYou pipeline follows a structured methodology designed to align with standard retrieval‑augmented generation practices while maintaining analytical integrity.
+
+First, raw source datasets are cleaned and standardized independently to preserve the integrity of each data provider’s reporting conventions. Granularity decisions are driven by how outcomes are published rather than by desired model resolution, avoiding false precision. Diagnostic checks are explicitly performed to distinguish genuine data gaps from processing errors.
+
+Second, relational joins are used strictly for **analytical validation**, not as direct model inputs. Rather than embedding joined tables, the pipeline constructs narrative‑level documents that aggregate education outcomes and related occupations into coherent semantic units. This ensures compatibility with embedding models and avoids semantic fragmentation during retrieval.
+
+Third, documents are embedded using Azure OpenAI embedding models, with one vector per document. Query embeddings are generated using the same model to ensure vector space consistency. Retrieval is performed using cosine similarity, producing an ordered set of relevant documents.
+
+Finally, retrieved documents may be passed to a generation model as contextual grounding to demonstrate how structured evidence can be translated into natural‑language responses. Citations refer to the underlying datasets rather than internal document IDs, prioritizing interpretability for end users. Throughout the pipeline, explainability, transparency, and responsible AI principles guide design decisions.
 
 ---
 
