@@ -153,11 +153,10 @@ The deployment name matches the model name directly, as required by the Azure Op
 
 ### Retrieval & Query Notebook
 
-- **Notebook:** `rag_query_eduyou.ipynb`
+- **Notebook:** `rag_ratrival.py`
 - Loads precomputed embeddings
 - Embeds user queries using the same model
 - Retrieves Top‑K documents via cosine similarity
-- (Optional) demonstrates how retrieved context can be passed to a generation model
 
 The answer‑generation step is included as a demonstration of how retrieved documents can support user‑facing responses. Evaluation focuses on document construction, embedding quality, and retrieval accuracy rather than on the generative model itself.
 
