@@ -242,8 +242,8 @@ The EduYou pipeline produces a **defensible, RAG‑ready system** that enables a
 ---
 ## Repository Structure
 
-- `data/raw/` – Original source datasets (unchanged)
-- `data/processed/` – Cleaned and harmonized datasets
-- `data/embeddings/` – Chunked, RAG-ready documents
-- `notebooks/` – Data preparation and RAG experiments
+- `data/Rag Data and Preparation/raw/` – Original source datasets (unchanged)
+- `data/Rag Data and Preparation/processed/` – Cleaned and harmonized datasets
+- `data/Rag Data and Preparation/embeddings/` – Chunked, RAG-ready documents
+- `data/Rag Data and Preparation/notebooks/` – Data preparation and RAG experiments
 - `app/` – Demo application for querying the RAG system
