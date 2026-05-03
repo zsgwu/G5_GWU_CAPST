@@ -169,6 +169,10 @@ Planned next steps include:
 - improving citation quality and transparency
 - scaling the app to support larger data sources and more robust filtering
 
+### Presentation Materials Overview
+
+**Capstone Group 5 Final Presentation**    The main slide deck summarizing the project, methodology, findings, and key insights.- **Final_Poster.png**    A visual, condensed version of the project designed for quick communication of core ideas and results.- **Link For Backup Demo**    A backup access point to the live demo or application in case the primary demo setup encounters issues.
+
 ## Contributors
 
 Benjamin Cooper, Julia Milliet Sciorra, Tina Zhou, Zahra Sultani, Ryan Hu 
