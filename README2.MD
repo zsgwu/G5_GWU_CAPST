@@ -79,10 +79,23 @@ Example inputs:
 ### Data Sources
 
 The project uses a mix of structured and unstructured data sources:
-- College Scorecard institution-level data
-- FAFSA public net price history data
-- CIP-based program and earnings documents
-- occupation and wage information included in the RAG source documents
+
+College Scorecard
+U.S. Department of Education.
+https://collegescorecard.ed.gov/data/
+
+CIP–SOC Crosswalk
+NCES & U.S. Bureau of Labor Statistics.
+https://nces.ed.gov/ipeds/cipcode/
+
+Occupational Employment and Wage Statistics (OEWS)
+U.S. Bureau of Labor Statistics.
+https://www.bls.gov/oes/
+
+FAFSA Net Price Data
+U.S. Department of Education
+https://nces.ed.gov/ipeds
+
 
 ### Modeling Approach
 
@@ -130,7 +143,6 @@ Performance is measured using two validation tracks:
 
 Core evaluation metrics include:
 - Accuracy
-- Groundedness
 - Clarity
 - Concision
 - Actionability
@@ -148,11 +160,6 @@ Key challenges included:
 - irrelevant RAG citations caused by shallow text-based matching
 - uneven coverage across majors in the embeddings file
 
-Recent improvements focused on:
-- moving RAG retrieval to embedding-based matching
-- improving Azure response handling
-- tightening UI consistency for structured and unstructured answers
-
 ## Future Work
 
 Planned next steps include:
@@ -164,18 +171,8 @@ Planned next steps include:
 
 ## Contributors
 
-- Ben Cooper
-
-## License
-
-License not yet specified.  
-MIT would be a reasonable choice for a class or demo project.
+Benjamin Cooper, Julia Milliet Sciorra, Tina Zhou, Zahra Sultani, Ryan Hu 
 
 ## Acknowledgments
 
-Thanks to the public data sources and libraries that make this project possible:
-- College Scorecard
-- FAFSA public data
-- Azure OpenAI
-- Streamlit
-- Pandas, NumPy, Altair, pdfplumber, and python-docx
+We are grateful to our instructors and the DNSC 4289 faculty, especially Professor Ali Obaidi and Professor Patrick Hall, for their time, mentorship, and thoughtful guidance throughout this project. We also acknowledge the use of publicly available datasets, including College Scorecard, FAFSA, and the Bureau of Labor Statistics.
