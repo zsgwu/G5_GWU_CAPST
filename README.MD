@@ -171,7 +171,9 @@ Planned next steps include:
 
 ### Presentation Materials Overview
 
-**Capstone Group 5 Final Presentation**    The main slide deck summarizing the project, methodology, findings, and key insights.- **Final_Poster.png**    A visual, condensed version of the project designed for quick communication of core ideas and results.- **Link For Backup Demo**    A backup access point to the live demo or application in case the primary demo setup encounters issues.
+- **Capstone Group 5 Final Presentation**    The main slide deck summarizing the project, methodology, findings, and key insights.
+- **Final_Poster.png**    Poster competition poster in PNG form.
+- **Link For Backup Demo**    A backup video of the planned demo for the live case presentation.
 
 ## Contributors
 
