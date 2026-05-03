@@ -1,18 +1,6 @@
 # Capstone_Project_Group 5
 
-# EduYou RAG Data Pipeline
-
----
-
-## Executive Summary
-
-EduYou is a **retrieval‑augmented generation (RAG)–ready data pipeline** designed to support transparent, evidence‑based exploration of education‑to‑career pathways. Using publicly available U.S. government data, the system links **fields of study**, **related occupations**, and **labor market outcomes** into semantically coherent documents suitable for vector embedding and retrieval.
-
-Rather than relying on opaque or speculative generation, the pipeline emphasizes **explainability, data provenance, and responsible use**. Retrieved documents provide grounded context for answering user questions about education pathways and career outcomes, while optional generation demonstrates how retrieved evidence can be translated into accessible, natural‑language responses. The design prioritizes analytical defensibility and alignment with standard RAG architectures.
-
----
-
-## Overview
+# EDU RAG Detailed Data Pipeline
 
 This project prepares a **Retrieval‑Augmented Generation (RAG)**–ready dataset that connects **fields of study**, **related occupations**, and **labor market outcomes** using authoritative U.S. government data. The resulting dataset supports explainable, grounded responses to questions about education pathways and career outcomes.
 
