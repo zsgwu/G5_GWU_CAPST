@@ -226,12 +226,3 @@ Finally, retrieved documents may be passed to a generation model as contextual g
 ## Result
 
 The EduYou pipeline produces a **defensible, RAG‑ready system** that enables accurate, explainable exploration of education‑to‑career pathways while respecting data limitations and responsible AI principles.
-
----
-## Repository Structure
-
-- `data/Rag Data and Preparation/raw/` – Original source datasets (unchanged)
-- `data/Rag Data and Preparation/processed/` – Cleaned and harmonized datasets
-- `data/Rag Data and Preparation/embeddings/` – Chunked, RAG-ready documents
-- `data/Rag Data and Preparation/notebooks/` – Data preparation and RAG experiments
-- `app/` – Demo application for querying the RAG system
